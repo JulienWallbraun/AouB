@@ -56,7 +56,8 @@ import Toast from 'react-native-simple-toast';
    }
 
     render(){
-    console.log("on est dans le render")    
+    console.log("on est dans le render du quizz")
+    //console.log(this.props.picturesUrl)
         return(
             <View style={styles.container}>
                 <Text style={styles.question}>Qu'est-ce que c'est?</Text>                
@@ -70,6 +71,7 @@ import Toast from 'react-native-simple-toast';
 
     componentDidMount(){
       console.log("on est dans le component didmount")
+      console.log(this.props.picturesUrl)
       this._loadPicture()
     }
   }
