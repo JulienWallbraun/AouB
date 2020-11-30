@@ -6,6 +6,7 @@ import {
   Button,
   FlatList,
   Text,
+  AppRegistry,
 } from "react-native";
 import { getPictures } from "../API/PixabayAPI";
 import { connect, dispatch } from "react-redux";
@@ -13,16 +14,16 @@ import Toast from "react-native-simple-toast";
 import ChoiceMenu from "./ChoiceMenu";
 
 const CHOICES_LIMIT = 6;
-const NB_PICTURES_PER_CHOICE = 3;
+const NB_PICTURES_PER_CHOICE = 100;
 const PATTERN = /[^A-Za-z\s]/;
 
 class Settings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      choices: ["LAMA", "ALPAGA"],
       newChoice: "",
       loadedChoices: 0,
+      value: 0.8,
     };
   }
 
@@ -34,7 +35,7 @@ class Settings extends React.Component {
     return (
       <View style={styles.choicesContainer}>
         <FlatList
-          data={this.props.picturesUrl}
+          data={this.props.pictures}
           renderItem={(item) => (
             <ChoiceMenu
               choiceName={item}
@@ -58,12 +59,12 @@ class Settings extends React.Component {
     const choice = key.props.choiceName.item;
     let found = false;
     let index = 0;
-    while (!found && index < this.props.picturesUrl.length) {
+    while (!found && index < this.props.pictures.length) {
       if (
-        this.props.picturesUrl[index][0].toUpperCase() ==
+        this.props.pictures[index][0].toUpperCase() ==
         choice[0].toUpperCase()
       ) {
-        this.props.picturesUrl.splice(index, 1);
+        this.props.pictures.splice(index, 1);
         found = true;
       }
       index++;
@@ -74,9 +75,9 @@ class Settings extends React.Component {
   _addChoice() {
     let found = false;
     let index = 0;
-    while (!found && index < this.props.picturesUrl.length) {
+    while (!found && index < this.props.pictures.length) {
       if (
-        this.props.picturesUrl[index][0].toUpperCase() ==
+        this.props.pictures[index][0].toUpperCase() ==
         this.state.newChoice.toUpperCase()
       ) {
         found = true;
@@ -84,7 +85,7 @@ class Settings extends React.Component {
       index++;
     }
     if (this.state.newChoice.length !== 0 && !found) {
-      this.props.picturesUrl.push([this.state.newChoice.toUpperCase(), []]);
+      this.props.pictures.push([this.state.newChoice.toUpperCase(), []]);
       this.setState({ newChoice: "" });
     }
   }
@@ -94,7 +95,7 @@ class Settings extends React.Component {
     this._togglePicturesClear();
     this.setState({ loadedChoices: 0 });
     //add pictures corresponding to the different choices availables
-    this.props.picturesUrl.forEach((element) => {
+    this.props.pictures.forEach((element) => {
       this._loadPicturesChoice(
         element[0].toString(),
         numberOfPicturesPerChoice
@@ -111,7 +112,7 @@ class Settings extends React.Component {
       this.setState({ loadedChoices: this.state.loadedChoices + 1 });
 
       //if pictures for every choices are loaded we can display questions
-      if (this.props.picturesUrl.length == this.state.loadedChoices) {
+      if (this.props.pictures.length == this.state.loadedChoices) {
         this._displayQuizz();
       }
     });
@@ -151,13 +152,14 @@ class Settings extends React.Component {
             value={this.state.newChoice}
           />
           <Button
+          color="green"
             title="ajouter"
             onPress={() => {
               this._addChoice();
             }}
             disabled={
               this.state.newChoice.length == 0 ||
-              this.props.picturesUrl.length >= CHOICES_LIMIT ||
+              this.props.pictures.length >= CHOICES_LIMIT ||
               this.state.newChoice.match(PATTERN)
             }
           />
@@ -171,7 +173,7 @@ class Settings extends React.Component {
           onPress={() => {
             this._loadPictures(NB_PICTURES_PER_CHOICE);
           }}
-          disabled={this.props.picturesUrl.length <= 1}
+          disabled={this.props.pictures.length <= 1}
         />
       </View>
     );
@@ -181,26 +183,29 @@ class Settings extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: "#eee",
+    //alignItems: "center",
+    //justifyContent: "center",
   },
   choicesContainer: {
     flex: 4,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  choiceContainer: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    //alignItems: "center",
+    //justifyContent: "center",
   },
   question: {
     flex: 1,
+    textAlign: "center",
+    textAlignVertical: "center",
+    fontSize: 20,
     backgroundColor: "#FFFFFF",
     alignItems: "center",
+    justifyContent: "center",
+  },
+  slider: {
+    flex: 1,
+    marginLeft: 10,
+    marginRight: 10,
+    alignItems: "stretch",
     justifyContent: "center",
   },
   newChoiceContainer: {
@@ -225,8 +230,10 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return {
-    picturesUrl: state.picturesUrl,
+    pictures: state.pictures,
   };
 };
+
+AppRegistry.registerComponent("Settings", () => Settings);
 
 export default connect(mapStateToProps)(Settings);

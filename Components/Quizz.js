@@ -8,15 +8,17 @@ import Toast from 'react-native-simple-toast';
         super(props);
         this.state = {
           answer: "",
-          picture: ""
+          picture: "",
+          nbCorrectAnswer: 0,
+          nbFalseAnswers: 0
         }
     }
 
     //select a picture type among choices available in settings
     _selectPictureType(){
-        const nbChoices = this.props.picturesUrl.length
+        const nbChoices = this.props.pictures.length
         const number = Math.floor(Math.random()*nbChoices)
-        const result = this.props.picturesUrl[number]
+        const result = this.props.pictures[number]
         return result
     }
 
@@ -36,16 +38,18 @@ import Toast from 'react-native-simple-toast';
     _testAnswer(answer){
       if (answer==this.state.answer){
         Toast.show("C'est VRAI!")
+        this.setState({nbCorrectAnswer: this.state.nbCorrectAnswer+1})
       }
       else{
         Toast.show("C'est FAUX!")
+        this.setState({nbFalseAnswers: this.state.nbFalseAnswers+1})
       }
     }
 
     _displayChoices(){
         return(
           <FlatList
-          data={this.props.picturesUrl}
+          data={this.props.pictures}
           keyExtractor={(item) => item[0].toString()}
           renderItem={({ item }) => <Button style={styles.button} title={item[0]} onPress={() => {
             this._testAnswer(item[0])
@@ -56,13 +60,15 @@ import Toast from 'react-native-simple-toast';
    }
 
     render(){
-    console.log("on est dans le render du quizz")
-    //console.log(this.props.picturesUrl)
         return(
             <View style={styles.container}>
-                <Text style={styles.question}>Qu'est-ce que c'est?</Text>                
+                <Text style={styles.question}>Qu'est-ce que c'est?</Text>
+                <View style={styles.scoreContainer}>
+                  <Text style={styles.scoreCorrect}>Nb réponses justes : {this.state.nbCorrectAnswer}</Text>
+                  <Text style={styles.scoreFalse}>Nb réponses fausses : {this.state.nbFalseAnswers}</Text>
+                </View>              
                 
-                <Image style={styles.image} source={this.state.picture? {uri: this.state.picture} : null}/>            
+                <Image style={styles.image} source={this.state.picture? {uri: this.state.picture} : null} resizeMode="contain"/>            
                   
                 {this._displayChoices()}        
             </View>
@@ -70,8 +76,6 @@ import Toast from 'react-native-simple-toast';
     }
 
     componentDidMount(){
-      console.log("on est dans le component didmount")
-      console.log(this.props.picturesUrl)
       this._loadPicture()
     }
   }
@@ -95,6 +99,25 @@ import Toast from 'react-native-simple-toast';
         alignItems: 'center',
         justifyContent: 'center',
       },
+      scoreContainer: {
+        flex: 1,
+        flexDirection: "row",
+        backgroundColor: '#FFFFFF',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      scoreCorrect: {
+        flex: 1,
+        color: '#00DD00',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      scoreFalse: {
+        flex: 1,
+        color: '#FF0000',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
     choice: {
         flex: 1,
         backgroundColor: '#EEEEEE',
@@ -110,14 +133,14 @@ import Toast from 'react-native-simple-toast';
       image: {
         flex: 7,
         height: 200, 
-        width:200,
+        width:400,
         margin: 5 
       },
   });
 
   const mapStateToProps = (state) => {
     return {
-      picturesUrl: state.picturesUrl,
+      pictures: state.pictures,
     };
   };
 
