@@ -23,7 +23,6 @@ class Settings extends React.Component {
     this.state = {
       newChoice: "",
       loadedChoices: 0,
-      value: 0.8,
     };
   }
 
@@ -40,6 +39,7 @@ class Settings extends React.Component {
             <ChoiceMenu
               choiceName={item}
               remove={(item) => this._removeChoice(item)}
+              updateChoiceProbability={(item) => this._updateChoiceProbability(item)}
             />
           )}
           keyExtractor={(item) => item[0]}
@@ -61,14 +61,21 @@ class Settings extends React.Component {
     let index = 0;
     while (!found && index < this.props.pictures.length) {
       if (
-        this.props.pictures[index][0].toUpperCase() ==
-        choice[0].toUpperCase()
+        this.props.pictures[index][0].toUpperCase() == choice[0].toUpperCase()
       ) {
         this.props.pictures.splice(index, 1);
         found = true;
       }
       index++;
     }
+    this.setState({ newChoice: "" });
+  }
+
+  _updateChoiceProbability(key, probability) {
+    console.log(probability)
+    key.props.choiceName.item[1] = probability
+    console.log("updateChoice Prob")
+    console.log(key.props.choiceName)
     this.setState({ newChoice: "" });
   }
 
@@ -85,7 +92,7 @@ class Settings extends React.Component {
       index++;
     }
     if (this.state.newChoice.length !== 0 && !found) {
-      this.props.pictures.push([this.state.newChoice.toUpperCase(), []]);
+      this.props.pictures.push([this.state.newChoice.toUpperCase(), 1, []]);
       this.setState({ newChoice: "" });
     }
   }
@@ -128,6 +135,11 @@ class Settings extends React.Component {
     } else return false;
   }
 
+  _togglePicturesUpdateProbability(val){
+    const action = { type: "UPDATE_CHOICE_PROBABILITY", value: val };
+    this.props.dispatch(action);
+  }
+
   _togglePicturesAdd(val) {
     const action = { type: "ADD_PICTURES", value: val };
     this.props.dispatch(action);
@@ -148,15 +160,18 @@ class Settings extends React.Component {
             style={styles.newChoiceText}
             placeholder="nouveau choix"
             onChangeText={(text) => this.setState({ newChoice: text })}
-            onSubmitEditing={() => this._addChoice()}
+            onSubmitEditing={(text) => {
+              if(this.state.newChoice.length > 0 && this.props.pictures.length < CHOICES_LIMIT && this.state.newChoice.match(PATTERN)==null)
+              {
+                this._addChoice();
+              }
+            }}
             value={this.state.newChoice}
           />
           <Button
-          color="green"
+            color="green"
             title="ajouter"
-            onPress={() => {
-              this._addChoice();
-            }}
+            onPress={() => this._addChoice()}
             disabled={
               this.state.newChoice.length == 0 ||
               this.props.pictures.length >= CHOICES_LIMIT ||
@@ -183,14 +198,10 @@ class Settings extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#eee",
-    //alignItems: "center",
-    //justifyContent: "center",
   },
   choicesContainer: {
     flex: 4,
-    //alignItems: "center",
-    //justifyContent: "center",
+    backgroundColor: "#FFFFFF",
   },
   question: {
     flex: 1,
@@ -209,14 +220,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   newChoiceContainer: {
+    backgroundColor: "#FFFFFF",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     padding: 5,
   },
   newChoiceText: {
-    //flex: 1,
-    backgroundColor: "#EEEEEE",
     alignItems: "center",
     justifyContent: "center",
     borderColor: "#000000",

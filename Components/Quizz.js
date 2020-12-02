@@ -14,20 +14,43 @@ import Toast from 'react-native-simple-toast';
         }
     }
 
-    //select a picture type among choices available in settings
+    /*
+    select a picture type among choices available in settings based on choice probabilty
+    Exemple : pictures = [[choice1, 5, ...], [choice1, 3, ...], [choice1, 2, ...], [choice1, 8, ...]]
+    the total number of choices is 5+3+2+8=18
+    If the number picked is 9, the choice selected is choice3 because 5+3<9<=5+3+2
+    */
     _selectPictureType(){
-        const nbChoices = this.props.pictures.length
+        let nbChoices = 0
+        this.props.pictures.forEach(element => {
+          nbChoices = nbChoices + element[1]
+        });
+        console.log("nbchoices"+nbChoices)
         const number = Math.floor(Math.random()*nbChoices)
-        const result = this.props.pictures[number]
+        let index = 0
+        let incrementedNumber = 0
+        let found = false
+        while (found==false && index <= this.props.pictures.length){
+          incrementedNumber = incrementedNumber + this.props.pictures[index][1]
+          if (incrementedNumber>=number){
+            found = true
+          }
+          else{
+            index++
+          }
+        }
+        console.log("number"+number)
+        console.log("index"+index)
+        const result = this.props.pictures[index]
         return result
     }
 
     _selectPictureByIndex(){
         const choicePictures = this._selectPictureType()
         const answer = choicePictures[0]
-        const nbPictures = choicePictures[1].length
+        const nbPictures = choicePictures[2].length
         const index =  Math.floor(Math.random()*nbPictures)
-        const result = choicePictures[1][index].webformatURL
+        const result = choicePictures[2][index].webformatURL
         this.setState({answer: answer, picture: result})
     }
 
@@ -95,6 +118,7 @@ import Toast from 'react-native-simple-toast';
       },
     question: {
         flex: 1,
+        fontSize: 20,
         backgroundColor: '#FFFFFF',
         alignItems: 'center',
         justifyContent: 'center',
