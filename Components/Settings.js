@@ -72,10 +72,7 @@ class Settings extends React.Component {
   }
 
   _updateChoiceProbability(key, probability) {
-    console.log(probability)
     key.props.choiceName.item[1] = probability
-    console.log("updateChoice Prob")
-    console.log(key.props.choiceName)
     this.setState({ newChoice: "" });
   }
 

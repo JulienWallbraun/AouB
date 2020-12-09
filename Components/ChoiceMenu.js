@@ -24,7 +24,7 @@ class ChoiceMenu extends React.Component {
             minValue={1}
             maxValue={10}/>
       </View>
-    );
+          );
   }
 }
 

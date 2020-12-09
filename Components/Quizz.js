@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet,View,TextInput, Button,FlatList,Text,ActivityIndicator, Image} from "react-native";
+import {StyleSheet,View, Button,FlatList,Text, Image} from "react-native";
 import { connect, dispatch } from "react-redux";
 import Toast from 'react-native-simple-toast';
 
@@ -25,7 +25,6 @@ import Toast from 'react-native-simple-toast';
         this.props.pictures.forEach(element => {
           nbChoices = nbChoices + element[1]
         });
-        console.log("nbchoices"+nbChoices)
         const number = Math.floor(Math.random()*nbChoices)
         let index = 0
         let incrementedNumber = 0
@@ -39,8 +38,6 @@ import Toast from 'react-native-simple-toast';
             index++
           }
         }
-        console.log("number"+number)
-        console.log("index"+index)
         const result = this.props.pictures[index]
         return result
     }
@@ -106,13 +103,13 @@ import Toast from 'react-native-simple-toast';
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fff',
+      backgroundColor: '#FFFFFF',
       alignItems: 'center',
       justifyContent: 'center',
     },
     choicesContainer: {
         flex: 4,
-        backgroundColor: '#fff',
+        backgroundColor: '#FFFFFF',
         alignItems: 'center',
         justifyContent: 'center',
       },
