@@ -38,7 +38,7 @@ const TRUE_ANSWER_MUSIC = new Audio.Sound();
         let found = false
         while (found==false && index <= this.props.pictures.length){
           incrementedNumber = incrementedNumber + this.props.pictures[index][1]
-          if (incrementedNumber>=number){
+          if (incrementedNumber>=number+1){
             found = true
           }
           else{
@@ -89,7 +89,7 @@ const TRUE_ANSWER_MUSIC = new Audio.Sound();
           />
         )        
    }
-   
+
    _loadMusics(){
     FALSE_ANSWER_MUSIC.loadAsync(require('../assets/music/deguello.mp3'), initialStatus = {}, downloadFirst = true)
     TRUE_ANSWER_MUSIC.loadAsync(require('../assets/music/jarabe.mp3'), initialStatus = {}, downloadFirst = true)
@@ -116,7 +116,6 @@ const TRUE_ANSWER_MUSIC = new Audio.Sound();
     }
 
     componentWillUnmount(){
-      console.log("unmounted")
       FALSE_ANSWER_MUSIC.unloadAsync()
       TRUE_ANSWER_MUSIC.unloadAsync()
     }
