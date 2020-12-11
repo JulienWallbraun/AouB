@@ -2,7 +2,7 @@
   "expo": {
     "name": "AouB",
     "slug": "AouB",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/iconCustom.png",
     "splash": {
@@ -18,7 +18,7 @@
     ],
     "ios": {
       "bundleIdentifier": "com.wallibi.aoub",
-      "buildNumber": "1.0.0",
+      "buildNumber": "2.0.0",
       "supportsTablet": true,
       "infoPlist": {
         "NSMicrophoneUsageDescription": "Allow AouB to access your microphone."
