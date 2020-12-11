@@ -2,8 +2,14 @@ import React from 'react';
 import {StyleSheet,View, Button,FlatList,Text, Image} from "react-native";
 import { connect, dispatch } from "react-redux";
 import Toast from 'react-native-simple-toast';
+import {Audio} from 'expo-av';
+
+
+const FALSE_ANSWER_MUSIC = new Audio.Sound();
+const TRUE_ANSWER_MUSIC = new Audio.Sound();
 
   class Quizz extends React.Component{
+
     constructor(props) {
         super(props);
         this.state = {
@@ -12,6 +18,7 @@ import Toast from 'react-native-simple-toast';
           nbCorrectAnswer: 0,
           nbFalseAnswers: 0
         }
+        this._loadMusics()
     }
 
     /*
@@ -58,10 +65,14 @@ import Toast from 'react-native-simple-toast';
     _testAnswer(answer){
       if (answer==this.state.answer){
         Toast.show("C'est VRAI!")
+        FALSE_ANSWER_MUSIC.stopAsync()
+        TRUE_ANSWER_MUSIC.playAsync()
         this.setState({nbCorrectAnswer: this.state.nbCorrectAnswer+1})
       }
       else{
         Toast.show("C'est FAUX!")
+        TRUE_ANSWER_MUSIC.stopAsync()
+        FALSE_ANSWER_MUSIC.playAsync()
         this.setState({nbFalseAnswers: this.state.nbFalseAnswers+1})
       }
     }
@@ -78,6 +89,11 @@ import Toast from 'react-native-simple-toast';
           />
         )        
    }
+   
+   _loadMusics(){
+    FALSE_ANSWER_MUSIC.loadAsync(require('../assets/music/deguello.mp3'), initialStatus = {}, downloadFirst = true)
+    TRUE_ANSWER_MUSIC.loadAsync(require('../assets/music/jarabe.mp3'), initialStatus = {}, downloadFirst = true)
+  }
 
     render(){
         return(
@@ -90,14 +106,21 @@ import Toast from 'react-native-simple-toast';
                 
                 <Image style={styles.image} source={this.state.picture? {uri: this.state.picture} : null} resizeMode="contain"/>            
                   
-                {this._displayChoices()}        
+                {this._displayChoices()}
             </View>
         )
     }
 
     componentDidMount(){
-      this._loadPicture()
+      this._loadPicture()      
     }
+
+    componentWillUnmount(){
+      console.log("unmounted")
+      FALSE_ANSWER_MUSIC.unloadAsync()
+      TRUE_ANSWER_MUSIC.unloadAsync()
+    }
+
   }
 
   const styles = StyleSheet.create({

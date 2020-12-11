@@ -19,7 +19,10 @@
     "ios": {
       "bundleIdentifier": "com.wallibi.aoub",
       "buildNumber": "1.0.0",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Allow AouB to access your microphone."
+      }
     },
     "android": {
       "package": "com.wallibi.aoub",
