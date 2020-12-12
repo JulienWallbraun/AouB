@@ -17,20 +17,6 @@ function togglePictures(state = initialState, action) {
   let found = false
   let index = 0
   switch (action.type) {
-    case "UPDATE_CHOICE_PROBABILITY":
-      nextState = {...state}
-      picturesUpdated = nextState.pictures
-      found = false
-      index = 0
-        while (!found && index<picturesUpdated.length){
-          if (picturesUpdated[index].name.toUpperCase() == action.value.name.toUpperCase()){
-            found = true
-            picturesUpdated[index].priority = action.value.priority
-            nextState.pictures = picturesUpdated
-          }
-          index++
-        }
-      return nextState || state;
     case "ADD_PICTURES":
       nextState = {...state}
       picturesUpdated = nextState.pictures

@@ -6,7 +6,6 @@ import {
   Button,
   FlatList,
   Text,
-  AppRegistry,
 } from "react-native";
 import { getPictures } from "../API/PixabayAPI";
 import { connect, dispatch } from "react-redux";
@@ -62,13 +61,6 @@ class Settings extends React.Component {
       }
       index++;
     }
-    this.setState({ newChoice: "" });
-  }
-
-  _updateChoiceProbability(key, probability) {
-    console.log("update priority")
-    key.props.choiceName.item.priority = probability
-    console.log(this.props.pictures)
     this.setState({ newChoice: "" });
   }
 
@@ -129,11 +121,6 @@ class Settings extends React.Component {
       Toast.show("Caractère non autorisé!");
       return true;
     } else return false;
-  }
-
-  _togglePicturesUpdateProbability(val){
-    const action = { type: "UPDATE_CHOICE_PROBABILITY", value: val };
-    this.props.dispatch(action);
   }
 
   _togglePicturesAdd(val) {
@@ -239,7 +226,5 @@ const mapStateToProps = (state) => {
     pictures: state.pictures,
   };
 };
-
-AppRegistry.registerComponent("Settings", () => Settings);
 
 export default connect(mapStateToProps)(Settings);

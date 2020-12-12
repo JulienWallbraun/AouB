@@ -4,10 +4,6 @@ class Choice{
         this.data = [];
         this.priority = 1;
     }
-
-    getTest(){
-        this.data = 'hy'
-    }
 }
 
 export default Choice;

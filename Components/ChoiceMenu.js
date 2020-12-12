@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Button, Text, TextInput } from "react-native";
+import { StyleSheet, View, Button, Text } from "react-native";
 import NumericInput from "react-native-numeric-input"
 
 class ChoiceMenu extends React.Component {

@@ -2,7 +2,7 @@ import "react-native-gesture-handler";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import React from 'react';
-import { StyleSheet, Text, View, LogBox } from 'react-native';
+import { StyleSheet, LogBox } from 'react-native';
 import Settings from './Components/Settings';
 import Quizz from './Components/Quizz';
 import {Provider} from 'react-redux';
