@@ -12,6 +12,7 @@ import { getPictures } from "../API/PixabayAPI";
 import { connect, dispatch } from "react-redux";
 import Toast from "react-native-simple-toast";
 import ChoiceMenu from "./ChoiceMenu";
+import Choice from '../Model/Choice';
 
 const CHOICES_LIMIT = 6;
 const NB_PICTURES_PER_CHOICE = 100;
@@ -42,17 +43,10 @@ class Settings extends React.Component {
               updateChoiceProbability={(item) => this._updateChoiceProbability(item)}
             />
           )}
-          keyExtractor={(item) => item[0]}
+          keyExtractor={(item) => item.name}
         ></FlatList>
       </View>
     );
-  }
-
-  _displayChoice(item, key) {
-    return [
-      <Text>{item}</Text>,
-      <Button title="delete" onPress={() => this._removeChoice(key)} />,
-    ];
   }
 
   _removeChoice(key) {
@@ -61,7 +55,7 @@ class Settings extends React.Component {
     let index = 0;
     while (!found && index < this.props.pictures.length) {
       if (
-        this.props.pictures[index][0].toUpperCase() == choice[0].toUpperCase()
+        this.props.pictures[index].name.toUpperCase() == choice.name.toUpperCase()
       ) {
         this.props.pictures.splice(index, 1);
         found = true;
@@ -72,7 +66,9 @@ class Settings extends React.Component {
   }
 
   _updateChoiceProbability(key, probability) {
-    key.props.choiceName.item[1] = probability
+    console.log("update priority")
+    key.props.choiceName.item.priority = probability
+    console.log(this.props.pictures)
     this.setState({ newChoice: "" });
   }
 
@@ -81,7 +77,7 @@ class Settings extends React.Component {
     let index = 0;
     while (!found && index < this.props.pictures.length) {
       if (
-        this.props.pictures[index][0].toUpperCase() ==
+        this.props.pictures[index].name.toUpperCase() ==
         this.state.newChoice.toUpperCase()
       ) {
         found = true;
@@ -89,7 +85,7 @@ class Settings extends React.Component {
       index++;
     }
     if (this.state.newChoice.length !== 0 && !found) {
-      this.props.pictures.push([this.state.newChoice.toUpperCase(), 1, []]);
+      this.props.pictures.push(new Choice(this.state.newChoice.toUpperCase()));
       this.setState({ newChoice: "" });
     }
   }
@@ -101,7 +97,7 @@ class Settings extends React.Component {
     //add pictures corresponding to the different choices availables
     this.props.pictures.forEach((element) => {
       this._loadPicturesChoice(
-        element[0].toString(),
+        element.name.toString(),
         numberOfPicturesPerChoice
       );
     });
@@ -111,7 +107,10 @@ class Settings extends React.Component {
   _loadPicturesChoice(choice, numberOfPictures) {
     getPictures(choice, numberOfPictures).then((data) => {
       //the choice name and the result of the request based on the choice are stored
-      const resultGet = [choice, data.hits];
+      const resultGet = {
+        name: choice, 
+        data: data.hits
+      };
       this._togglePicturesAdd(resultGet);
       this.setState({ loadedChoices: this.state.loadedChoices + 1 });
 

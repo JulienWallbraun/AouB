@@ -1,12 +1,14 @@
+import Choice from '../../Model/Choice'
+
 const initialState = {
   /*
   pictures contains all data to load pictures
-  each choice is represented by an array of 3 elements :
-  - index 0 : choice name
-  - index 1 : choice probabilty weight to be selected randomly in the quizz
-  - index 2 : data of all pictures loaded for this choice
+  each choice is represented by an map of 3 elements :
+  - name : choice name
+  - priority : choice probabilty weight to be selected randomly in the quizz
+  - data : data of all pictures loaded for this choice
   */
-  pictures: [ ["LAMA", 1, [] ], ["ALPAGA", 1, [] ] ],
+  pictures: [new Choice("LAMA"), new Choice("ALPAGA")]
 };
 
 function togglePictures(state = initialState, action) {
@@ -16,18 +18,15 @@ function togglePictures(state = initialState, action) {
   let index = 0
   switch (action.type) {
     case "UPDATE_CHOICE_PROBABILITY":
-      console.log("on update choice prob...")
-      console.log(action.value)
       nextState = {...state}
       picturesUpdated = nextState.pictures
       found = false
       index = 0
         while (!found && index<picturesUpdated.length){
-          if (picturesUpdated[index][0].toUpperCase() == action.value[0].toUpperCase()){
+          if (picturesUpdated[index].name.toUpperCase() == action.value.name.toUpperCase()){
             found = true
-            picturesUpdated[index][1] = action.value[1]
+            picturesUpdated[index].priority = action.value.priority
             nextState.pictures = picturesUpdated
-            console.log(nextState.pictures)
           }
           index++
         }
@@ -38,9 +37,9 @@ function togglePictures(state = initialState, action) {
       found = false
       index = 0
         while (!found && index<picturesUpdated.length){
-          if (picturesUpdated[index][0].toUpperCase() == action.value[0].toUpperCase()){
+          if (picturesUpdated[index].name.toUpperCase() == action.value.name.toUpperCase()){
             found = true
-            picturesUpdated[index][2] = action.value[1]
+            picturesUpdated[index].data = action.value.data
             nextState.pictures = picturesUpdated
           }
           index++
@@ -49,7 +48,7 @@ function togglePictures(state = initialState, action) {
     case "CLEAR_PICTURES":
       nextState = {...state}
       nextState.pictures.forEach((element) => {
-        element[2]=[]
+        element.data=[]
       });
       return nextState || state;
     default:

@@ -30,14 +30,14 @@ const TRUE_ANSWER_MUSIC = new Audio.Sound();
     _selectPictureType(){
         let nbChoices = 0
         this.props.pictures.forEach(element => {
-          nbChoices = nbChoices + element[1]
+          nbChoices = nbChoices + element.priority
         });
         const number = Math.floor(Math.random()*nbChoices)
         let index = 0
         let incrementedNumber = 0
         let found = false
         while (found==false && index <= this.props.pictures.length){
-          incrementedNumber = incrementedNumber + this.props.pictures[index][1]
+          incrementedNumber = incrementedNumber + this.props.pictures[index].priority
           if (incrementedNumber>=number+1){
             found = true
           }
@@ -51,10 +51,10 @@ const TRUE_ANSWER_MUSIC = new Audio.Sound();
 
     _selectPictureByIndex(){
         const choicePictures = this._selectPictureType()
-        const answer = choicePictures[0]
-        const nbPictures = choicePictures[2].length
+        const answer = choicePictures.name
+        const nbPictures = choicePictures.data.length
         const index =  Math.floor(Math.random()*nbPictures)
-        const result = choicePictures[2][index].webformatURL
+        const result = choicePictures.data[index].webformatURL
         this.setState({answer: answer, picture: result})
     }
 
@@ -81,9 +81,9 @@ const TRUE_ANSWER_MUSIC = new Audio.Sound();
         return(
           <FlatList
           data={this.props.pictures}
-          keyExtractor={(item) => item[0].toString()}
-          renderItem={({ item }) => <Button style={styles.button} title={item[0]} onPress={() => {
-            this._testAnswer(item[0])
+          keyExtractor={(item) => item.name.toString()}
+          renderItem={({ item }) => <Button style={styles.button} title={item.name} onPress={() => {
+            this._testAnswer(item.name)
             this._loadPicture()}}/>
           }
           />

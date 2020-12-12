@@ -14,12 +14,12 @@ class ChoiceMenu extends React.Component {
     const { choiceName } = this.props;
     return (
       <View style={styles.choiceMenucontainer}>
-        <Text style={styles.choiceText}>{choiceName.item[0]}</Text>
+        <Text style={styles.choiceText}>{choiceName.item.name}</Text>
         <Button style={styles.choiceDeleteButton} color="red" title="Supprimer" onPress={() => this.props.remove(this)} />
         <NumericInput
           value={this.state.probability}
           onChange={(value) => {            
-            choiceName.item[1]= value
+            choiceName.item.priority = value
             this.setState({probability: value})}}
             minValue={1}
             maxValue={10}/>
